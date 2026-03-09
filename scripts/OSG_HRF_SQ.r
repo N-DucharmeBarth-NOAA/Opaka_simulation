@@ -10,10 +10,10 @@ print(getwd())
 args <- commandArgs(trailingOnly = TRUE)
 print(args) 
 
-set.seed <- read.csv("setseed.csv")
-sas_full <- read.csv("sas.csv")
-effN <- read.csv("effN.csv")
-load("constantF_mat.RData")
+set.seed <- read.csv("Inputs/setseed.csv")
+sas_full <- read.csv("Inputs/sas.csv")
+effN <- read.csv("Inputs/effN.csv")
+load("Inputs/constantF_mat.RData")
 
 #Variables
 nyears <- 100
@@ -21,8 +21,11 @@ nyears_fwd <- 25
 scen <- "HRF_SQ"
 
 #Template OM and EM files
-om_dir <- paste0("opaka-om-", nyears_fwd, "_FRSlencomp")
-em_dir <- paste0("opaka-em-", nyears_fwd, "_FRSlencomp")
+om_dir <- paste0(getwd(),"/models/opaka-om-", nyears_fwd, "_FRSlencomp")
+em_dir <- paste0(getwd(),"/models/opaka-em-", nyears_fwd, "_FRSlencomp")
+
+dir.create(om_dir, recursive = TRUE, showWarnings = FALSE)
+dir.create(em_dir, recursive = TRUE, showWarnings = FALSE)
 
 #Get iteration number
 I <- as.numeric(tail(strsplit(args[1], "/")[[1]], n = 1))
