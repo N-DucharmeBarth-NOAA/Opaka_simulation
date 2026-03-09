@@ -47,6 +47,7 @@
 
 library(data.table)
 library(magrittr)
+library(tibble)
 
 dir_ss3 <- file.path(getwd(), "HRF_SQ_25_yrfwd","1","em")
 dir_out <- file.path(getwd(), "opal_data", "opakapaka_ss3")
@@ -127,17 +128,26 @@ cpue_dt <- as.data.table(do.call(rbind, cpue_rows))
 setnames(cpue_dt, c("year", "month", "fleet", "obs", "se"))
 cpue_dt <- cpue_dt[year >= styr & year <= endyr]
 
+# Build CPUE tibble matching required format
+fish_levels <- sort(unique(cpue_dt$fleet))
 cpue_data <- cpue_dt[, .(
   year    = year,
   month   = month,
   ts      = year - styr + 1,
   fishery = fleet,
+  index   = match(fleet, fish_levels),
   metric  = "cpue",
   units   = catch_units[fleet],
   value   = obs,
   se      = se
-)] %>% .[,value:= value/mean(value),by = fishery] %>%  # scale to mean 1 for better numerical stability
-.[fishery==1,index:=1] %>% .[fishery==3,index:=2]
+)]
+# scale to mean 1 per index for numerical stability
+cpue_data[, value := value / mean(value), by = fishery]
+# ensure column order and convert to tibble
+cpue_data <- tibble::as_tibble(cpue_data[, .(year, month, ts, fishery, index, metric, units, value, se)])
+
+# number of distinct indices
+n_index <- length(fish_levels)
 
 # =============================================================================
 # 4. Extract length composition data
@@ -315,6 +325,7 @@ opaka_data <- list(
 
   # CPUE
   cpue_switch = 1L,
+  n_index     = n_index,
   cpue_data   = cpue_data,
 
   # Biology
@@ -399,10 +410,13 @@ cat(sprintf("  M = %.3f (constant)\n", M_val))
 cat(sprintf("  LW: a=%.2e, b=%.2f\n", lw_a, lw_b))
 cat(sprintf("  Maturity: logistic, Mat50=%.1f cm, slope=%.2f\n", mat50, mat_slope))
 cat(sprintf("  Catch: %d non-zero entries (fleets 1-2)\n", sum(catch_obs_ysf > 0)))
+n_cpue <- nrow(cpue_data)
+n_cpue_f1 <- sum(cpue_data$fishery == 1)
+n_cpue_f3 <- sum(cpue_data$fishery == 3)
 cat(sprintf("  CPUE: %d obs (fleet 1: %d, fleet 3: %d)\n",
-            nrow(cpue_data),
-            cpue_data[fishery == 1, .N],
-            cpue_data[fishery == 3, .N]))
+            n_cpue,
+            n_cpue_f1,
+            n_cpue_f3))
 cat(sprintf("  Selectivity types: %s\n", paste(sel_type_f, collapse = ", ")))
 
 cat("\nopaka_lf.rda:\n")
