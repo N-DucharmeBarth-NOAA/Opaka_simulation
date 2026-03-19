@@ -7,6 +7,24 @@
 #track directories so can recurse into them
 !*/ 
 ## track SS input files filetypes
+!HRF_SQ_25_yrfwd/1/om/data_echo.ss_new
+!HRF_SQ_25_yrfwd/1/om/control.ss_new
+!HRF_SQ_25_yrfwd/1/om/forecast.ss_new
+!HRF_SQ_25_yrfwd/1/om/starter.ss_new
+!HRF_SQ_25_yrfwd/1/om/ss.par
+!HRF_SQ_25_yrfwd/1/om/Report.sso
+!HRF_SQ_25_yrfwd/1/em/data_echo.ss_new
+!HRF_SQ_25_yrfwd/1/em/control.ss_new
+!HRF_SQ_25_yrfwd/1/em/forecast.ss_new
+!HRF_SQ_25_yrfwd/1/em/starter.ss_new
+!HRF_SQ_25_yrfwd/1/em/ss.par
+!HRF_SQ_25_yrfwd/1/em/Report.sso
+!HRF_SQ_25_yrfwd/1/em_no_platoon/data_echo.ss_new
+!HRF_SQ_25_yrfwd/1/em_no_platoon/control.ss_new
+!HRF_SQ_25_yrfwd/1/em_no_platoon/forecast.ss_new
+!HRF_SQ_25_yrfwd/1/em_no_platoon/starter.ss_new
+!HRF_SQ_25_yrfwd/1/em_no_platoon/ss.par
+!HRF_SQ_25_yrfwd/1/em_no_platoon/Report.sso
 !models/03-simplified-mod
 !models/opaka-em/*
 !models/opaka-om/* 
